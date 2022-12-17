@@ -1,10 +1,10 @@
 # Creates RDS Instance 
 resource "aws_db_instance" "mysql" {
   identifier             = "roboshop-mysql-${var.ENV}"
-  allocated_storage      = 10
+  allocated_storage      = var.MYSQL_STORAGE
   engine                 = "mysql"
-  engine_version         = "5.7"
-  instance_class         = "db.t3.micro"
+  engine_version         = var.MYSQL_ENGINE_VERSION
+  instance_class         = var.MYSQL_INSTANCE_CLASS
   db_name                = "dummy"
   username               = "admin1"
   password               = "RoboShop1"
@@ -38,16 +38,16 @@ resource "aws_security_group" "allow_mysql" {
 
   ingress {
     description      = "Allow MySQL Connection From Default VPC"
-    from_port        = 3306
-    to_port          = 3306
+    from_port        = var.MYSQL_PORT_NUMBER
+    to_port          = var.MYSQL_PORT_NUMBER
     protocol         = "tcp"
     cidr_blocks      = [data.terraform_remote_state.vpc.outputs.DEFAULT_VPC_CIDR]
   }
 
   ingress {
     description      = "Allow MySQL Connection From Private VPC"
-    from_port        = 3306
-    to_port          = 3306
+    from_port        = var.MYSQL_PORT_NUMBER
+    to_port          = var.MYSQL_PORT_NUMBER
     protocol         = "tcp"
     cidr_blocks      = [data.terraform_remote_state.vpc.outputs.VPC_CIDR]
   }
